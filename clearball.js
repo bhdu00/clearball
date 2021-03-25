@@ -19,7 +19,7 @@ var config = {
 
 const rowNum = 8;
 const columnNum = 8;
-const colorNum = 6; // max 8
+const colorNum = 4; // max 8
 
 var self;
 
@@ -315,60 +315,107 @@ function clearballs(row, col) {
 
     var color = board[row][col].texture.key;
     var clears = [];
-
-    // vertical
-    var up = col - 1; // up
-    while (up >= 0 && board[row][up] != null) {
-        if (board[row][up].texture.key == color) {
-            up--;
-        }
-        else {
-            break;
-        }
-    }
-    var dn = col + 1; // down
-    while (dn < columnNum && board[row][dn] != null) {
-        if (board[row][dn].texture.key == color) {
-            dn++;
-        }
-        else {
-            break;
-        }
-    }
-    if (dn - up - 1 >= 5) {
-        for (let i = up + 1; i <= dn - 1; i++)
-        clears.push(row.toString() + i.toString());
-    }
+    var up, dn, lt, rt;
 
     // horizon
-    var lt = row - 1; // left
+    lt = row - 1; // left
     while (lt >= 0 && board[lt][col] != null) {
         if (board[lt][col].texture.key == color) {
             lt--;
         }
-        else {
-            break;
-        }
+        else break;
     }
-    var rt = row + 1; // right
+    rt = row + 1; // right
     while (rt < rowNum && board[rt][col] != null) {
         if (board[rt][col].texture.key == color) {
             rt++;
         }
-        else {
-            break;
-        }
+        else break;
     }
     if (rt - lt - 1 >= 5) {
-        for (let i = lt + 1; i <= rt - 1; i++)
-        clears.push(i.toString() + col.toString());
+        for (let i = lt + 1; i <= rt - 1; i++) {
+            if (clears.indexOf(i.toString() + col.toString()) === -1 ) {
+                clears.push(i.toString() + col.toString());
+            }
+        }
     }
 
+    // vertical
+    up = col - 1; // up
+    while (up >= 0 && board[row][up] != null) {
+        if (board[row][up].texture.key == color) {
+            up--;
+        }
+        else break;
+    }
+    dn = col + 1; // down
+    while (dn < columnNum && board[row][dn] != null) {
+        if (board[row][dn].texture.key == color) {
+            dn++;
+        }
+        else break;
+    }
+    if (dn - up - 1 >= 5) {
+        for (let i = up + 1; i <= dn - 1; i++) {
+            if (clears.indexOf(row.toString() + i.toString()) === -1 ) {
+                clears.push(row.toString() + i.toString());
+            }
+        }
+    }
 
-    // diagonal
+    // diagonal upper left to lower right
+    lt = row - 1; // left
+    up = col - 1; // up
+    while (lt >= 0 && up >= 0 && board[lt][up] != null) {
+        if (board[lt][up].texture.key == color) {
+            lt--;
+            up--;
+        }
+        else break;
+    }
+    rt = row + 1; // right
+    dn = col + 1; // down
+    while (rt < rowNum && dn < columnNum && board[rt][dn] != null) {
+        if (board[rt][dn].texture.key == color) {
+            rt++;
+            dn++;
+        }
+        else break;
+    }
+    if (rt - lt - 1 >= 5) {
+        for (let i = lt + 1; i <= rt - 1; i++) {
+            if (clears.indexOf(i.toString() + (i + (dn - rt)).toString()) === -1 ) {
+                clears.push(i.toString() + (i + (dn - rt)).toString());
+            }
+        }
+    }
 
-
-
+    // diagonal lower left to upper right
+    lt = row - 1; // left
+    dn = col + 1; // down
+    while (lt >= 0 && dn < columnNum && board[lt][dn] != null) {
+        if (board[lt][dn].texture.key == color) {
+            lt--;
+            dn++;
+        }
+        else break;
+    }
+    rt = row + 1; // right
+    up = col - 1; // up
+    while (rt < rowNum && up >= 0 && board[rt][up] != null) {
+        if (board[rt][up].texture.key == color) {
+            rt++;
+            up--;
+        }
+        else break;
+    }
+    if (rt - lt - 1 >= 5) {
+        for (let i = lt + 1; i <= rt - 1; i++) {
+            if (clears.indexOf(i.toString() + (up + rt - i).toString()) === -1 ) {
+                clears.push(i.toString() + (up + rt - i).toString());
+            }
+        }
+    }
 
     console.log('up:' + up);
     console.log('down:' + dn);
