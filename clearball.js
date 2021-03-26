@@ -19,7 +19,7 @@ var config = {
 
 const rowNum = 8;
 const columnNum = 8;
-const colorNum = 4; // max 8
+const colorNum = 6; // max 8
 
 var self;
 
