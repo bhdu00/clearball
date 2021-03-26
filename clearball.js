@@ -19,7 +19,7 @@ var config = {
 
 const rowNum = 8;
 const columnNum = 8;
-const colorNum = 6; // max 8
+const colorNum = 4; // max 8
 
 var self;
 
@@ -27,6 +27,7 @@ var self;
 var score = 0;
 var gameOver = false;
 var ballSelected = false;
+var ballscleared = false;
 var startOrUserMoved = true;
 var selRow;
 var selCol;
@@ -79,7 +80,7 @@ function update () {
         this.scene.stop();
     }
 
-    if (startOrUserMoved) {
+    if (startOrUserMoved && !ballscleared) { // if this turn has not cleared balls
         // Move 3 balls
         moveBallsBoard();
         
@@ -153,6 +154,7 @@ function moveBallsBoard () {
         gameOver = true;
         return;
     }
+
     // move ball to board
     for (let i = 0; i < 3; i++) {
         let randomNum = Phaser.Math.Between(1,  emptyNum - i);
@@ -424,6 +426,7 @@ function clearballs(row, col) {
 
     console.log('clear balls:' + clears);
 
+    ballscleared = false;
     // clear balls
     while (clears.length > 0) {
         console.log('clears.length:' + clears.length);
@@ -431,6 +434,7 @@ function clearballs(row, col) {
         c = clears.pop();
         board[c.substr(0, 1)][c.substr(1, 1)].destroy();
         board[c.substr(0, 1)][c.substr(1, 1)] = null;
+        ballscleared = true;
         score += 1;
     }
 
